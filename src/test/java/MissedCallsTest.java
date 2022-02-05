@@ -1,9 +1,9 @@
 import org.junit.jupiter.api.*;
+
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,11 +13,7 @@ public class MissedCallsTest {
     @BeforeEach
     public void startEach() {
         System.out.println("One test started");
-    }
-
-    @AfterEach
-    public void finishEach() {
-        System.out.println("One test finished");
+        sut = new MissedCalls();
     }
 
     @BeforeAll
@@ -25,38 +21,39 @@ public class MissedCallsTest {
         System.out.println("Tests started");
     }
 
+    @AfterEach
+    public void finishEach() {
+        System.out.println("One test finished");
+    }
+
     @AfterAll
     public static void finished() {
         System.out.println("Tests finished");
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"8945666222", "8945555333", "8945111245"})
+    public void testAddMissedCalls(String calls) {
+        //when
+        int callsBefore = sut.getMissedCalls().size();
+        sut.addMissedCalls(calls);
+        int callsAfter = sut.getMissedCalls().size();
+        //then
+        assertNotEquals(callsBefore, callsAfter);
+    }
+
     @Test
     public void testGetMissedCalls() {
-        sut = new MissedCalls();
         String missedCall = "89376664545";
         sut.missedCalls.put(LocalDateTime.now(), missedCall);
         //then
         assertEquals(sut.getMissedCalls().size(), 1);
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"8945666222, 8945555333, 8945111245"})
-    public void testAddMissedCalls(String missedCall) {
-        //given
-        sut = new MissedCalls();
-        //when
-        int callsBefore = sut.getMissedCalls().size();
-        sut.addMissedCalls(missedCall);
-        int callsAfter = sut.getMissedCalls().size();
-        //then
-        assertNotEquals(callsBefore, callsAfter);
-
-    }
 
     @Test
     public void testClearCalls() {
         //given
-        sut = new MissedCalls();
         LocalDateTime time1 = LocalDateTime.now().minusSeconds(1);
         String missedCall1 = "89376664545";
         LocalDateTime time2 = LocalDateTime.now();
@@ -71,6 +68,5 @@ public class MissedCallsTest {
 
         //then
         assertEquals(sut.missedCalls.size(), 0);
-
     }
 }

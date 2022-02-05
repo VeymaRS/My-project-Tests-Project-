@@ -9,6 +9,7 @@ public class ContactsTest {
     @BeforeEach
     public void startEach() {
         System.out.println("One test started");
+        sut = new Contacts();
     }
 
     @AfterEach
@@ -28,7 +29,6 @@ public class ContactsTest {
 
     @Test
     public void testAddContact() {
-        sut = new Contacts();
         Contact contact = new Contact("Ivan", "Ivanov", "8922755654", Group.WORK);
 
         sut.addContact(contact);
@@ -38,8 +38,6 @@ public class ContactsTest {
 
     @Test
     public void testDellContact() {
-        sut = new Contacts();
-
         Contact contact1 = new Contact("Ivan", "Ivanov", "8922755654", Group.WORK);
         Contact contact2 = new Contact("Sergey", "Potapov", "8922441231", Group.WORK);
         sut.addContact(contact1);
